@@ -1,0 +1,154 @@
+node n1 {
+    type router
+    model PC
+    network-config {
+	hostname n1
+	!
+	interface eth0
+	 ip address 192.0.3.20/24
+	 ipv6 address 2001:db8:1::20/64
+	!
+    }
+    canvas c1
+    iconcoords {587.0 266.0}
+    labelcoords {587.0 298.0}
+    interface-peer {eth0 n2}
+}
+
+node n2 {
+    type router
+    model router
+    network-config {
+	hostname n2
+	!
+	interface eth1
+	 ip address 192.0.3.1/24
+	 ipv6 address 2001:db8:1::1/64
+	!
+	interface eth0
+	 ip address 192.0.2.1/24
+	 ipv6 address 2001:db8:0::1/64
+	!
+    }
+    canvas c1
+    iconcoords {276.0 220.0}
+    labelcoords {276.0 252.0}
+    interface-peer {eth0 n3}
+    interface-peer {eth1 n1}
+}
+
+node n3 {
+    type router
+    model host
+    network-config {
+	hostname n3
+	!
+	interface eth0
+	 ip address 192.0.2.10/24
+	 ipv6 address 2001:db8:0::10/64
+	!
+    }
+    canvas c1
+    iconcoords {278.0 432.0}
+    labelcoords {278.0 464.0}
+    interface-peer {eth0 n2}
+    custom-config {
+	custom-config-id service:UserDefined
+	custom-command UserDefined
+	config {
+	files=('Index.html', )
+	cmdup=('python -m SimpleHTTPServer 80', )
+	}
+    }
+    custom-config {
+	custom-config-id service:UserDefined:Index.html
+	custom-command Index.html
+	config {
+	<!DOCTYPE html>
+	<html lang="pt-BR">
+	<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>GST - Grow Small Towns</title>
+	</head>
+	<body>
+	<header>
+	<h1>GST - Grow Small Towns</h1>
+	<nav>
+	<ul>
+	<li><a href="#">Início</a></li>
+	<li><a href="#">Sobre Nós</a></li>
+	<li><a href="#">Serviços</a></li>
+	<li><a href="#">Contato</a></li>
+	</ul>
+	</nav>
+	</header>
+	<main>
+	<section>
+	<h2>Bem-vindo ao GST</h2>
+	<p>O GST - Grow Small Towns é dedicado a fornecer soluções sustentáveis para o crescimento de cidades pequenas. Nossa equipe de especialistas está comprometida em trazer soluções para os problemas enfrentados nas cidades pequenas em todo o país.</p>
+	</section>
+	<section>
+	<h2>Sobre Nós</h2>
+	<p>O GST foi fundadocom o objetivo de apoiar o crescimento de cidades pequenas.Ajudamos inúmeras cidades pequenas a alcançar a prosperidade econômica e social por meio de soluções inovadoras e uma equipe dedicada.</p>
+	</section>
+	<section>
+	<h2>Serviços</h2>
+	<ul>
+	<li>Desenvolvimento de software</li>
+	<li>Planejamento e design de infraestrutura</li>
+	</ul>
+	</section>
+	<section>
+	<h2>Contato</h2>
+	<form>
+	<label for="name">Nome:</label>
+	<input type="text" id="name" name="name"><br><br>
+	<label for="email">E-mail:</label>
+	<input type="email" id="email" name="email"><br><br>
+	<label for="message">Mensagem:</label><br>
+	<textarea id="message" name="message"></textarea><br><br>
+	<input type="submit" value="Enviar">
+	</form>
+	</section>
+	</main>
+	<footer>
+	<p>&copy; 2023 GST - Grow Small Towns</p>
+	</footer>
+	</body>
+	</html>
+	}
+    }
+    services {DefaultRoute SSH UserDefined}
+}
+
+link l1 {
+    nodes {n3 n2}
+    bandwidth 0
+}
+
+link l2 {
+    nodes {n2 n1}
+    bandwidth 0
+}
+
+canvas c1 {
+    name {Canvas1}
+}
+
+option global {
+    interface_names no
+    ip_addresses yes
+    ipv6_addresses yes
+    node_labels yes
+    link_labels yes
+    show_api no
+    background_images no
+    annotations yes
+    grid yes
+    traffic_start 0
+}
+
+option session {
+}
+
